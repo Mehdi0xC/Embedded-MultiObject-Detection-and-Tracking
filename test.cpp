@@ -9,7 +9,7 @@ using namespace cv;
 #include <fstream>
 #include <iostream>
 #include <cstdlib>
-#include <chrono>
+#include "utils.hpp"
 using namespace std;
 
 
@@ -24,9 +24,7 @@ string CLASSES[] = {"face", "person"};
 int main(void)
 {
 
-    typedef std::chrono::high_resolution_clock Clock;
-    typedef std::chrono::milliseconds milliseconds;
-
+    Chronometer chronometer;
     String modelConfiguration = "model/ssd_mobilenet_v3.pbtxt";
     String modelWeights = "model/frozen_inference_graph.pb";
 
@@ -39,7 +37,7 @@ int main(void)
 
     if (net.empty())
     {
-        std::cerr << "Can't load network by using the following files: " << std::endl;
+        std::cerr << "Can't load the network, sth went wrong" << std::endl;
         exit(-1);
     }
 
@@ -62,8 +60,8 @@ int main(void)
 
 
     cv::namedWindow("result",1);
-    Clock::time_point t0 = Clock::now();
     double k = 0;
+    chronometer.tic();
     for(;;k++)
     {
         Mat frame;   
@@ -122,10 +120,8 @@ int main(void)
         cv::imshow("result", frame);
         if(cv::waitKey(30) >= 0) break;
     }
-    Clock::time_point t1 = Clock::now();
-    milliseconds ms = std::chrono::duration_cast<milliseconds>(t1 - t0);
-    cout << "Elapsed time: " << ms.count() << endl;
-    cout << "FrameRate: " << k/(ms.count()/1000) << endl;
+    cout << "Elapsed time: " <<  chronometer.toc() << endl;
+    // cout << "FrameRate: " << k/(ms.count()/1000) << endl;
     return 0;
 }
 

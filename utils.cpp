@@ -1,8 +1,10 @@
-#include "myfunc.hpp"
+#include "utils.hpp"
 #include <iostream>
+#include <chrono>
+
 
 Utils::Utils()
 {
-	std::cout << 666;
-	 testnumber = 5;
+	start = 0;
+    end = 0;
 }
