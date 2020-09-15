@@ -5,8 +5,8 @@
 
 Chronometer::Chronometer()
 {
-	start = 0;
-    end = 0;
+	// start = 0;
+ //    end = 0;
 }
 
 void Chronometer::tic()
@@ -17,5 +17,5 @@ int Chronometer::toc()
 {
 	end = Clock::now();
 	elapsed = std::chrono::duration_cast<milliseconds>(end - start);
-	return elapsed;
+	return elapsed.count();
 }
