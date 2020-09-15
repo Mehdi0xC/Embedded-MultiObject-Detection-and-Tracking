@@ -26,7 +26,7 @@ int main(void)
 
     Config config;
     Chronometer chronometer;
-    Detector detector(config.model);
+    Detector detector(config.model, config.classes);
 
     VideoCapture cap(0); // open the default camera
     if(!cap.isOpened()) 
@@ -40,34 +40,34 @@ int main(void)
 
     Mat frame;
     cout << config.classes[1];
-    // cv::namedWindow("result",1);
+    cv::namedWindow("result",1);
 
-    // double frameNo = 0;
+    double frameNo = 0;
 
-    // chronometer.tic();
-    // for(;;frameNo++)
-    // {
-    //     Mat frame;   
-    //     cap >> frame; 
-    //     /////////////////////////////////////////
-    //     // DO PROCESSING HERE
-    //     /////////////////////////////////////////
-    //     resize(frame, frame, Size(800,450));
-    //     frame = detector.detect(frame, &config.classes);
+    chronometer.tic();
+    for(;;frameNo++)
+    {
+        Mat frame;   
+        cap >> frame; 
+        /////////////////////////////////////////
+        // DO PROCESSING HERE
+        /////////////////////////////////////////
+        resize(frame, frame, Size(800,450));
+        frame = detector.detect(frame);
         
-    //     // vector<Mat> outs;
-    //     // Mat detection = net.forward(outs, getOutputsNames(net));
+        // vector<Mat> outs;
+        // Mat detection = net.forward(outs, getOutputsNames(net));
 
-    //     // postprocess(frame, outs);
+        // postprocess(frame, outs);
 
-    //     // Mat detectionMat(detection.size[2], detection.size[3], CV_32F, detection.ptr<float>());
+        // Mat detectionMat(detection.size[2], detection.size[3], CV_32F, detection.ptr<float>());
 
-    //     /////////////////////////////////////////
-    //     // END PROCESSING HERE
-    //     /////////////////////////////////////////
-    //     cv::imshow("result", frame);
-    //     if(cv::waitKey(30) >= 0) break;
-    // }
+        /////////////////////////////////////////
+        // END PROCESSING HERE
+        /////////////////////////////////////////
+        cv::imshow("result", frame);
+        if(cv::waitKey(30) >= 0) break;
+    }
     cout << "Elapsed time: " <<  chronometer.toc() << endl;
     // cout << "FrameRate: " << k/(ms.count()/1000) << endl;
     return 0;

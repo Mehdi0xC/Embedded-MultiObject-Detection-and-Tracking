@@ -3,6 +3,7 @@
 #include <iostream>
 #include <opencv2/opencv.hpp>
 #include <opencv2/dnn.hpp>
+#include <vector>
 class Detector
 {
 	private:
@@ -10,8 +11,9 @@ class Detector
 	    std::string modelWeights;
 	    cv::dnn::Net net;
     public:
-    Detector(std::string);
-    cv::Mat detect(cv::Mat, std::string*);
+    Detector(std::string, std::vector<std::string>);
+    cv::Mat detect(cv::Mat);
+    std::vector<std::string> classes;
 };
 
 #endif

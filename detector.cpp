@@ -8,12 +8,12 @@ using namespace cv;
 using namespace std;
 
 
-Detector::Detector(std::string model)
+Detector::Detector(std::string model, std::vector<std::string> detectionClasses)
 {
     modelConfiguration = "models/" + model +"/model_configurations.pbtxt";
     modelWeights = "models/" + model +"/frozen_graph.pb";
     net = dnn::readNetFromTensorflow(modelWeights,modelConfiguration);
-    
+    classes = detectionClasses;
     if (net.empty())
     {
         std::cerr << "Can't load the network, sth went wrong" << std::endl;
@@ -24,7 +24,7 @@ Detector::Detector(std::string model)
 }
 
 
-cv::Mat Detector::detect(cv::Mat frame, std::string* classes)
+cv::Mat Detector::detect(cv::Mat frame)
 {
 
 		Mat inputBlob = dnn::blobFromImage(frame, 0.007843, Size(800,450), Scalar(127.5, 127.5, 127.5), false);
@@ -55,7 +55,7 @@ cv::Mat Detector::detect(cv::Mat frame, std::string* classes)
                 ss.str("");
                 ss << confidence;
                 String conf(ss.str());
-                String label =  ": " + conf;
+                String label =  classes[idx] + ": " + conf;
                 int baseLine = 0;
                 Size labelSize = getTextSize(label, FONT_HERSHEY_SIMPLEX, 0.5, 1, &baseLine);
                 putText(frame, label, Point(xLeftBottom, yLeftBottom),
