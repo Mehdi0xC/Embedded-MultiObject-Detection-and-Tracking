@@ -10,6 +10,7 @@ using namespace cv;
 #include <iostream>
 #include <cstdlib>
 #include "utils.hpp"
+#include "config.hpp"
 using namespace std;
 
 
@@ -24,9 +25,10 @@ string CLASSES[] = {"face", "person"};
 int main(void)
 {
 
+    Config config;
     Chronometer chronometer;
-    String modelConfiguration = "model/ssd_mobilenet_v3.pbtxt";
-    String modelWeights = "model/frozen_inference_graph.pb";
+    string modelConfiguration = "models/" + config.model +"/model_configurations.pbtxt";
+    string modelWeights = "models/" + config.model +"/frozen_graph.pb";
 
     cout <<"Have openCL: " << boolalpha << ocl::haveOpenCL() << endl;
     if(ocl::haveOpenCL())
