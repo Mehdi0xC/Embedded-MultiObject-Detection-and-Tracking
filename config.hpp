@@ -8,6 +8,7 @@ class Config
     Config();
     std::string model;
     std::vector<std::string> classes;
+    float confidenceThreshold;
 };
 
 #endif

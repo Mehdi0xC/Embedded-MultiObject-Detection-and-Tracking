@@ -8,12 +8,13 @@ using namespace cv;
 using namespace std;
 
 
-Detector::Detector(std::string model, std::vector<std::string> detectionClasses)
+Detector::Detector(std::string model, std::vector<std::string> detectionClasses, float confidence)
 {
     modelConfiguration = "models/" + model +"/model_configurations.pbtxt";
     modelWeights = "models/" + model +"/frozen_graph.pb";
     net = dnn::readNetFromTensorflow(modelWeights,modelConfiguration);
     classes = detectionClasses;
+    confidenceThreshold = confidence;
     if (net.empty())
     {
         std::cerr << "Can't load the network, sth went wrong" << std::endl;
@@ -27,14 +28,13 @@ Detector::Detector(std::string model, std::vector<std::string> detectionClasses)
 cv::Mat Detector::detect(cv::Mat frame)
 {
 
-		Mat inputBlob = dnn::blobFromImage(frame, 0.007843, Size(800,450), Scalar(127.5, 127.5, 127.5), false);
-        net.setInput(inputBlob);
+		Mat inputBlob = dnn::blobFromImage(frame, 0.007843, Size(320,320), Scalar(127.5, 127.5, 127.5), false);
+		// Mat inputBlob;
+		// dnn::blobFromImage(frame, inputBlob, 1.0, Size(frame.cols, frame.rows), Scalar(), true, false);
 
+        net.setInput(inputBlob);
         Mat detection = net.forward("detection_out");
         Mat detectionMat(detection.size[2], detection.size[3], CV_32F, detection.ptr<float>());
-
-        ostringstream ss;
-        float confidenceThreshold = 0.64;
         for (int i = 0; i < detectionMat.rows; i++)
         {
             float confidence = detectionMat.at<float>(i, 2);
@@ -51,7 +51,7 @@ cv::Mat Detector::detect(cv::Mat frame)
                 rectangle(frame, object, Scalar(0, 255, 0), 2);
 
                 cout << classes[idx] << ": " << confidence << endl;
-
+                ostringstream ss;
                 ss.str("");
                 ss << confidence;
                 String conf(ss.str());

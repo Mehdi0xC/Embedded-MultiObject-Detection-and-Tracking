@@ -9,4 +9,5 @@ Config::Config()
     model = "ssd_mobilenet_v3";
     classes.push_back("face");
     classes.push_back("person");
+    confidenceThreshold = 0.6;
 }

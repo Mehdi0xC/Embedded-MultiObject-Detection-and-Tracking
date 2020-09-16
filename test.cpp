@@ -25,8 +25,8 @@ int main(void)
 {
 
     Config config;
-    Chronometer chronometer;
-    Detector detector(config.model, config.classes);
+    // Chronometer chronometer;
+    Detector detector(config.model, config.classes, config.confidenceThreshold);
 
     VideoCapture cap(0); // open the default camera
     if(!cap.isOpened()) 
@@ -35,24 +35,22 @@ int main(void)
         exit(-1);
     }
 
-    cap.set(CAP_PROP_FRAME_WIDTH, 800);
-	cap.set(CAP_PROP_FRAME_HEIGHT, 450);
+ //    cap.set(CAP_PROP_FRAME_WIDTH, 1000);
+	// cap.set(CAP_PROP_FRAME_HEIGHT, 600);
 
     Mat frame;
-    cout << config.classes[1];
     cv::namedWindow("result",1);
 
-    double frameNo = 0;
+    // double frameNo = 0;
 
-    chronometer.tic();
-    for(;;frameNo++)
+    // chronometer.tic();
+    for(;;)
     {
-        Mat frame;   
         cap >> frame; 
         /////////////////////////////////////////
         // DO PROCESSING HERE
         /////////////////////////////////////////
-        resize(frame, frame, Size(800,450));
+        // resize(frame, frame, Size(100,75));
         frame = detector.detect(frame);
         
         // vector<Mat> outs;
@@ -66,9 +64,10 @@ int main(void)
         // END PROCESSING HERE
         /////////////////////////////////////////
         cv::imshow("result", frame);
+        // frame.release();
         if(cv::waitKey(30) >= 0) break;
     }
-    cout << "Elapsed time: " <<  chronometer.toc() << endl;
+    // cout << "Elapsed time: " <<  chronometer.toc() << endl;
     // cout << "FrameRate: " << k/(ms.count()/1000) << endl;
     return 0;
 }
