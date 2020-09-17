@@ -4,6 +4,7 @@
 #include <chrono>
 #include <opencv2/opencv.hpp>
 #include <vector>
+#include "config.hpp"
 class Chronometer
 {
 	private:
@@ -36,15 +37,13 @@ class DetectionList
 class Drawer
 {
     private:
-         cv::Size labelSize;
          int font;
          cv::Scalar boxColor;
          cv::Scalar labelColor;
          float boxThickness;
          float labelThickness;
-
     public:
-        Drawer(int, cv::Scalar, cv::Scalar, float, float);
+        Drawer(Config&);
         void draw(cv::Mat& , DetectionList&);
 
 };

@@ -21,7 +21,7 @@ int main(void)
 
     Config config;
     DetectionList detectionList;
-    Drawer drawer(config.font, config.boxColor, config.labelColor, config.boxThickness, config.labelThickness);
+    Drawer drawer(config);
     // Chronometer chronometer;
     cout << config.indices[1];
     Detector detector(config.model, config.classes, config.indices, config.confidenceThreshold);

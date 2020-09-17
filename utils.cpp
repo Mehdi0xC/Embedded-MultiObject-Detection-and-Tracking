@@ -38,13 +38,13 @@ void DetectionList::clearList()
 
 
 
-Drawer::Drawer(int labelFont, cv::Scalar inputBoxColor, cv::Scalar inputLabelColor, float inputBoxThickness, float inputLabelThickness)
+Drawer::Drawer(Config& config)
 {
-	font = labelFont;
-	boxColor = inputBoxColor;
-	labelColor = inputLabelColor;
-	boxThickness = inputBoxThickness;
-	labelThickness = inputLabelThickness;
+	font = config.font;
+	boxColor = config.boxColor;
+	labelColor = config.labelColor;
+	boxThickness = config.boxThickness;
+	labelThickness = config.labelThickness;
 
 }
 void Drawer::draw(cv::Mat& frame, DetectionList& detectionList)
