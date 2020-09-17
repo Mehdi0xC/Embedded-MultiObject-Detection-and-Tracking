@@ -40,7 +40,7 @@ int main(void)
     cv::namedWindow("result",1);
     // double frameNo = 0;
     // chronometer.tic();
-    for(;;)
+    for(;;frameNo++)
     {
         cap >> frame; 
         /////////////////////////////////////////
@@ -67,8 +67,7 @@ int main(void)
         // frame.release();
         if(cv::waitKey(30) >= 0) break;
     }
-    // cout << "Elapsed time: " <<  chronometer.toc() << endl;
-    // cout << "FrameRate: " << k/(ms.count()/1000) << endl;
+    cout << "FrameRate: " << frameNo/chronometer.toc()) << endl;
     return 0;
 }
 
