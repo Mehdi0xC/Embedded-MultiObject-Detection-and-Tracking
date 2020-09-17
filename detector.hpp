@@ -15,6 +15,10 @@ class Detector
     	std::vector<int>::iterator it;
     	std::vector<int> indices;
     	bool newDetection;
+    	cv::Mat inputBlob;
+    	cv::Mat detection; 
+    	cv::Mat detectionOut;
+
 
     public:
     Detector(std::string, std::vector<std::string>, std::vector<int>, float);

@@ -30,26 +30,24 @@ Detector::Detector(std::string model, std::vector<std::string> detectionClasses,
 bool Detector::detect(cv::Mat frame, DetectionList& detectionList)
 {
 
-		Mat inputBlob = dnn::blobFromImage(frame, 0.007843, Size(320,320), Scalar(127.5, 127.5, 127.5), false);
-		// Mat inputBlob;
-		// dnn::blobFromImage(frame, inputBlob, 1.0, Size(frame.cols, frame.rows), Scalar(), true, false);
         newDetection = false;
+		inputBlob = dnn::blobFromImage(frame, 0.007843, Size(320,320), Scalar(127.5, 127.5, 127.5), false);
         net.setInput(inputBlob);
-        Mat detection = net.forward("detection_out");
-        Mat detectionMat(detection.size[2], detection.size[3], CV_32F, detection.ptr<float>());
-        for (int i = 0; i < detectionMat.rows; i++)
+        detection = net.forward("detection_out");
+        detectionOut(detection.size[2], detection.size[3], CV_32F, detection.ptr<float>());
+        for (int i = 0; i < detectionOut.rows; i++)
         {
-            float confidence = detectionMat.at<float>(i, 2);
-            int idx = static_cast<int>(detectionMat.at<float>(i, 1));
+            float confidence = detectionOut.at<float>(i, 2);
+            int idx = static_cast<int>(detectionOut.at<float>(i, 1));
             it = std::find(indices.begin(), indices.end(), idx);
             if ((confidence > confidenceThreshold) && (it != indices.end()))
             {
                 newDetection = true;
                 idx = std::distance(indices.begin(), it);
-                int xLeftBottom = static_cast<int>(detectionMat.at<float>(i, 3) * frame.cols);
-                int yLeftBottom = static_cast<int>(detectionMat.at<float>(i, 4) * frame.rows);
-                int xRightTop = static_cast<int>(detectionMat.at<float>(i, 5) * frame.cols);
-                int yRightTop = static_cast<int>(detectionMat.at<float>(i, 6) * frame.rows);
+                int xLeftBottom = static_cast<int>(detectionOut.at<float>(i, 3) * frame.cols);
+                int yLeftBottom = static_cast<int>(detectionOut.at<float>(i, 4) * frame.rows);
+                int xRightTop = static_cast<int>(detectionOut.at<float>(i, 5) * frame.cols);
+                int yRightTop = static_cast<int>(detectionOut.at<float>(i, 6) * frame.rows);
                 Rect object((int)xLeftBottom, (int)yLeftBottom,
                             (int)(xRightTop - xLeftBottom),
                             (int)(yRightTop - yLeftBottom));
