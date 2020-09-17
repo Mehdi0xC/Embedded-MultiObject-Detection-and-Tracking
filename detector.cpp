@@ -8,15 +8,16 @@ using namespace cv;
 using namespace std;
 
 
-Detector::Detector(std::string model, std::vector<std::string> detectionClasses, std::vector<int> classIndices, float confidence)
+Detector::Detector(Config& config)
 {
-    modelConfiguration = "models/" + model +"/model_configurations.pbtxt";
-    modelWeights = "models/" + model +"/frozen_graph.pb";
-    net = dnn::readNetFromTensorflow(modelWeights,modelConfiguration);
-    classes = detectionClasses;
-    confidenceThreshold = confidence;
-    indices = classIndices;
+
     newDetection = false;
+    classes = config.classes;
+    confidenceThreshold = config.confidenceThreshold;
+    indices = config.indices;
+    modelConfiguration = config.modelConfiguration;
+    modelWeights = config.modelWeights;
+    net = dnn::readNetFromTensorflow(modelWeights,modelConfiguration);
     if (net.empty())
     {
         std::cerr << "Can't load the network, sth went wrong" << std::endl;

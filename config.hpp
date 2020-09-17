@@ -8,7 +8,9 @@ class Config
 {
     public:
     Config();
-    std::string model;
+    std::string modelConfiguration;
+    std::string modelWeights;
+    
     std::vector<std::string> classes;
     std::vector<int> indices;
 

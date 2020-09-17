@@ -12,7 +12,8 @@ Config::Config()
     font = cv::FONT_HERSHEY_SIMPLEX;
     boxThickness = 2;
     labelThickness = 2;
-    model = "ssd_mobilenet_v3";
+    modelConfiguration = "models/ssd_mobilenet_v3/model_configurations.pbtxt";
+    modelWeights = "models/ssd_mobilenet_v3/frozen_graph.pb";
     classes.push_back("person");
     indices.push_back(1);
     classes.push_back("bicycle");

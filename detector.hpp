@@ -5,6 +5,8 @@
 #include <opencv2/dnn.hpp>
 #include <vector>
 #include "utils.hpp"
+#include "config.hpp"
+
 class Detector
 {
 	private:
@@ -20,7 +22,7 @@ class Detector
 
 
     public:
-    Detector(std::string, std::vector<std::string>, std::vector<int>, float);
+    Detector(Config&);
     bool detect(cv::Mat, DetectionList&);
     std::vector<std::string> classes;
 

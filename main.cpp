@@ -20,12 +20,12 @@ int main(void)
 {
 
     Config config;
-    DetectionList detectionList;
+    DetectionList currentDetectionList;
+    DetectionList updatedDetectionList;
+
     Drawer drawer(config);
     // Chronometer chronometer;
-    cout << config.indices[1];
-    Detector detector(config.model, config.classes, config.indices, config.confidenceThreshold);
-
+    Detector detector(config);
     VideoCapture cap(0); // open the default camera
     if(!cap.isOpened()) 
     {
@@ -38,21 +38,20 @@ int main(void)
 
     Mat frame;
     cv::namedWindow("result",1);
-    vector <int> predictionIndices;
-    vector <Rect> predictionLocations;
     // double frameNo = 0;
-    int newDetection;
     // chronometer.tic();
     for(;;)
     {
-        detectionList.clearList();
         cap >> frame; 
         /////////////////////////////////////////
         // DO PROCESSING HERE
         /////////////////////////////////////////
         // resize(frame, frame, Size(100,75));
-        newDetection = detector.detect(frame, detectionList);
-        cout << detectionList.detectionLabels[0] << endl;
+        updatedDetectionList.clearList();
+        if(detector.detect(frame, updatedDetectionList))
+        {
+            currentDetectionList = updatedDetectionList;
+        }
         // vector<Mat> outs;
         // Mat detection = net.forward(outs, getOutputsNames(net));
 
@@ -63,7 +62,7 @@ int main(void)
         /////////////////////////////////////////
         // END PROCESSING HERE
         /////////////////////////////////////////
-        drawer.draw(frame, detectionList);
+        drawer.draw(frame, currentDetectionList);
         cv::imshow("result", frame);
         // frame.release();
         if(cv::waitKey(30) >= 0) break;
