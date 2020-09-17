@@ -2,6 +2,8 @@
 #define UTILS_H
 
 #include <chrono>
+#include <opencv2/opencv.hpp>
+#include <vector>
 class Chronometer
 {
 	private:
@@ -15,6 +17,22 @@ class Chronometer
         Chronometer();
         void tic();
         int toc();
+};
+
+
+class DetectionList
+{
+    private:
+
+    public:
+        DetectionList();
+        std::vector<std::string> detectionLabels;
+        std::vector<cv::Rect> detectionRectangles;
+        std::vector<cv::Point> labelPoints;
+        std::vector<int> confidence;
+        void clearList();
+
+
 };
 #endif
 

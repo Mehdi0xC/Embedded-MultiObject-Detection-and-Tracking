@@ -21,3 +21,19 @@ int Chronometer::toc()
 }
 
 
+
+
+DetectionList::DetectionList()
+{
+
+}
+
+void DetectionList::clearList()
+{
+	    detectionLabels.clear();
+        detectionRectangles.clear();
+        labelPoints.clear();
+        confidence.clear();
+}
+
+

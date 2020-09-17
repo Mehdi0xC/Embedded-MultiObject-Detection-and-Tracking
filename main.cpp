@@ -20,6 +20,7 @@ int main(void)
 {
 
     Config config;
+    DetectionList detectionList;
     // Chronometer chronometer;
     cout << config.indices[1];
     Detector detector(config.model, config.classes, config.indices, config.confidenceThreshold);
@@ -36,18 +37,20 @@ int main(void)
 
     Mat frame;
     cv::namedWindow("result",1);
-
+    vector <int> predictionIndices;
+    vector <Rect> predictionLocations;
     // double frameNo = 0;
-
+    int newDetection;
     // chronometer.tic();
     for(;;)
     {
+        detectionList.clearList();
         cap >> frame; 
         /////////////////////////////////////////
         // DO PROCESSING HERE
         /////////////////////////////////////////
         // resize(frame, frame, Size(100,75));
-        frame = detector.detect(frame);
+        newDetection = detector.detect(frame, detectionList);
         
         // vector<Mat> outs;
         // Mat detection = net.forward(outs, getOutputsNames(net));

@@ -16,6 +16,7 @@ Detector::Detector(std::string model, std::vector<std::string> detectionClasses,
     classes = detectionClasses;
     confidenceThreshold = confidence;
     indices = classIndices;
+    newDetection = false;
     if (net.empty())
     {
         std::cerr << "Can't load the network, sth went wrong" << std::endl;
@@ -26,13 +27,13 @@ Detector::Detector(std::string model, std::vector<std::string> detectionClasses,
 }
 
 
-cv::Mat Detector::detect(cv::Mat frame)
+bool Detector::detect(cv::Mat frame, DetectionList& detectionList)
 {
 
 		Mat inputBlob = dnn::blobFromImage(frame, 0.007843, Size(320,320), Scalar(127.5, 127.5, 127.5), false);
 		// Mat inputBlob;
 		// dnn::blobFromImage(frame, inputBlob, 1.0, Size(frame.cols, frame.rows), Scalar(), true, false);
-
+        newDetection = false;
         net.setInput(inputBlob);
         Mat detection = net.forward("detection_out");
         Mat detectionMat(detection.size[2], detection.size[3], CV_32F, detection.ptr<float>());
@@ -43,6 +44,7 @@ cv::Mat Detector::detect(cv::Mat frame)
             it = std::find(indices.begin(), indices.end(), idx);
             if ((confidence > confidenceThreshold) && (it != indices.end()))
             {
+                newDetection = true;
                 idx = std::distance(indices.begin(), it);
                 int xLeftBottom = static_cast<int>(detectionMat.at<float>(i, 3) * frame.cols);
                 int yLeftBottom = static_cast<int>(detectionMat.at<float>(i, 4) * frame.rows);
@@ -51,19 +53,22 @@ cv::Mat Detector::detect(cv::Mat frame)
                 Rect object((int)xLeftBottom, (int)yLeftBottom,
                             (int)(xRightTop - xLeftBottom),
                             (int)(yRightTop - yLeftBottom));
-                rectangle(frame, object, Scalar(0, 255, 0), 2);
-
-                cout << idx << ": " << confidence << endl;
                 ostringstream ss;
                 ss.str("");
                 ss << confidence;
                 String conf(ss.str());
                 String label =  classes[idx] + ": " + conf;
                 int baseLine = 0;
-                Size labelSize = getTextSize(label, FONT_HERSHEY_SIMPLEX, 0.5, 1, &baseLine);
-                putText(frame, label, Point(xLeftBottom, yLeftBottom),
-                    FONT_HERSHEY_SIMPLEX, 1, Scalar(255,255,255),2);
+                detectionList.detectionRectangles.push_back(object);
+                detectionList.confidence.push_back((int)confidence);
+                detectionList.detectionLabels.push_back(label);
+                detectionList.labelPoints.push_back(Point(xLeftBottom, yLeftBottom));
+
+
+                // Size labelSize = getTextSize(label, FONT_HERSHEY_SIMPLEX, 0.5, 1, &baseLine);
+                // putText(frame, label, Point(xLeftBottom, yLeftBottom),
+                //     FONT_HERSHEY_SIMPLEX, 1, Scalar(255,255,255),2);
              }
         }   
-        return frame;
+        return newDetection;
 }

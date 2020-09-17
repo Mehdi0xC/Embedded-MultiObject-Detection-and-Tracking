@@ -4,6 +4,7 @@
 #include <opencv2/opencv.hpp>
 #include <opencv2/dnn.hpp>
 #include <vector>
+#include "utils.hpp"
 class Detector
 {
 	private:
@@ -13,10 +14,11 @@ class Detector
 	    float confidenceThreshold;
     	std::vector<int>::iterator it;
     	std::vector<int> indices;
+    	bool newDetection;
 
     public:
     Detector(std::string, std::vector<std::string>, std::vector<int>, float);
-    cv::Mat detect(cv::Mat);
+    bool detect(cv::Mat, DetectionList&);
     std::vector<std::string> classes;
 
 };
