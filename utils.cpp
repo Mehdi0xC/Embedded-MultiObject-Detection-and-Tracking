@@ -3,10 +3,6 @@
 #include <chrono>
 
 
-Chronometer::Chronometer()
-{
-
-}
 
 void Chronometer::tic()
 {
@@ -18,9 +14,6 @@ int Chronometer::toc()
 	elapsed = std::chrono::duration_cast<milliseconds>(end - start);
 	return elapsed.count();
 }
-
-
-
 
 DetectionList::DetectionList()
 {
@@ -34,7 +27,6 @@ void DetectionList::clearList()
         labelPoints.clear();
         confidence.clear();
 }
-
 
 
 Drawer::Drawer(Config& config)
