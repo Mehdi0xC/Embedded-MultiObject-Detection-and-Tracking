@@ -22,8 +22,6 @@ Detector::Detector(std::string model, std::vector<std::string> detectionClasses,
         std::cerr << "Can't load the network, sth went wrong" << std::endl;
         exit(-1);
     }
-
-
 }
 
 
@@ -34,7 +32,7 @@ bool Detector::detect(cv::Mat frame, DetectionList& detectionList)
 		inputBlob = dnn::blobFromImage(frame, 0.007843, Size(320,320), Scalar(127.5, 127.5, 127.5), false);
         net.setInput(inputBlob);
         detection = net.forward("detection_out");
-        detectionOut(detection.size[2], detection.size[3], CV_32F, detection.ptr<float>());
+        Mat detectionOut(detection.size[2], detection.size[3], CV_32F, detection.ptr<float>());
         for (int i = 0; i < detectionOut.rows; i++)
         {
             float confidence = detectionOut.at<float>(i, 2);
@@ -53,19 +51,14 @@ bool Detector::detect(cv::Mat frame, DetectionList& detectionList)
                             (int)(yRightTop - yLeftBottom));
                 ostringstream ss;
                 ss.str("");
-                ss << confidence;
+                ss << (int)(confidence*100) << "%";
                 String conf(ss.str());
                 String label =  classes[idx] + ": " + conf;
                 int baseLine = 0;
                 detectionList.detectionRectangles.push_back(object);
                 detectionList.confidence.push_back((int)confidence);
                 detectionList.detectionLabels.push_back(label);
-                detectionList.labelPoints.push_back(Point(xLeftBottom, yLeftBottom));
-
-
-                // Size labelSize = getTextSize(label, FONT_HERSHEY_SIMPLEX, 0.5, 1, &baseLine);
-                // putText(frame, label, Point(xLeftBottom, yLeftBottom),
-                //     FONT_HERSHEY_SIMPLEX, 1, Scalar(255,255,255),2);
+                detectionList.labelPoints.push_back(Point(xLeftBottom, yLeftBottom-10));
              }
         }   
         return newDetection;

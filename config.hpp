@@ -2,6 +2,8 @@
 #define CONFIG_H_
 #include <iostream>
 #include <vector>
+#include <opencv2/opencv.hpp>
+
 class Config
 {
     public:
@@ -11,6 +13,11 @@ class Config
     std::vector<int> indices;
 
     float confidenceThreshold;
+    int font;
+    cv::Scalar boxColor;
+    cv::Scalar labelColor;
+    float boxThickness;
+	float labelThickness;
 };
 
 #endif

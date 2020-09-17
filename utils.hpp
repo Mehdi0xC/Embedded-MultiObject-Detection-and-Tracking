@@ -31,7 +31,21 @@ class DetectionList
         std::vector<cv::Point> labelPoints;
         std::vector<int> confidence;
         void clearList();
+};
 
+class Drawer
+{
+    private:
+         cv::Size labelSize;
+         int font;
+         cv::Scalar boxColor;
+         cv::Scalar labelColor;
+         float boxThickness;
+         float labelThickness;
+
+    public:
+        Drawer(int, cv::Scalar, cv::Scalar, float, float);
+        void draw(cv::Mat& , DetectionList&);
 
 };
 #endif

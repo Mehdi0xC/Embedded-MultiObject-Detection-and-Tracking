@@ -21,6 +21,7 @@ int main(void)
 
     Config config;
     DetectionList detectionList;
+    Drawer drawer(config.font, config.boxColor, config.labelColor, config.boxThickness, config.labelThickness);
     // Chronometer chronometer;
     cout << config.indices[1];
     Detector detector(config.model, config.classes, config.indices, config.confidenceThreshold);
@@ -51,7 +52,7 @@ int main(void)
         /////////////////////////////////////////
         // resize(frame, frame, Size(100,75));
         newDetection = detector.detect(frame, detectionList);
-        
+        cout << detectionList.detectionLabels[0] << endl;
         // vector<Mat> outs;
         // Mat detection = net.forward(outs, getOutputsNames(net));
 
@@ -62,6 +63,7 @@ int main(void)
         /////////////////////////////////////////
         // END PROCESSING HERE
         /////////////////////////////////////////
+        drawer.draw(frame, detectionList);
         cv::imshow("result", frame);
         // frame.release();
         if(cv::waitKey(30) >= 0) break;

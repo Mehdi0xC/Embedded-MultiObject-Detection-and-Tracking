@@ -6,6 +6,12 @@ Config::Config()
     // model = "faster_rcnn_inception_v2";
     // model = "faster_rcnn_resnet50";
     // model = "mask_rcnn_inception_v2";
+    boxColor = cv::Scalar(0,255,0);
+    labelColor = cv::Scalar(255,255,255);
+
+    font = cv::FONT_HERSHEY_SIMPLEX;
+    boxThickness = 2;
+    labelThickness = 2;
     model = "ssd_mobilenet_v3";
     classes.push_back("person");
     indices.push_back(1);

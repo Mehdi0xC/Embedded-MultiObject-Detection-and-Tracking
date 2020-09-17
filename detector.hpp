@@ -17,7 +17,6 @@ class Detector
     	bool newDetection;
     	cv::Mat inputBlob;
     	cv::Mat detection; 
-    	cv::Mat detectionOut;
 
 
     public:
