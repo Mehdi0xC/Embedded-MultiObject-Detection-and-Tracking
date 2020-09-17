@@ -19,3 +19,5 @@ int Chronometer::toc()
 	elapsed = std::chrono::duration_cast<milliseconds>(end - start);
 	return elapsed.count();
 }
+
+

@@ -11,11 +11,14 @@ class Detector
 	    std::string modelWeights;
 	    cv::dnn::Net net;
 	    float confidenceThreshold;
+    	std::vector<int>::iterator it;
+    	std::vector<int> indices;
 
     public:
-    Detector(std::string, std::vector<std::string>, float);
+    Detector(std::string, std::vector<std::string>, std::vector<int>, float);
     cv::Mat detect(cv::Mat);
     std::vector<std::string> classes;
+
 };
 
 #endif
