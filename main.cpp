@@ -6,11 +6,18 @@ using namespace cv;
 #include "utils.hpp"
 #include "config.hpp"
 #include "detector.hpp"
+#include <opencv2/tracking.hpp>
+
 using namespace std;
 
 
 int main(void)
 {
+
+    // string trackerTypes[8] = {"BOOSTING", "MIL", "KCF", "TLD","MEDIANFLOW", "GOTURN", "MOSSE", "CSRT"};
+    // string trackerType = trackerTypes[2];
+    tracker = TrackerKCF::create();
+
 
     Config config;
     DetectionList currentDetectionList;
@@ -37,10 +44,18 @@ int main(void)
     {
         cap >> frame; 
         updatedDetectionList.clearList();
+        if (frameNo%1000 == 0)
         if(detector.detect(frame, updatedDetectionList))
         {
             currentDetectionList = updatedDetectionList;
+            tracker->init(frame, currentDetectionList.detectionRectangles[0]);
+
         }
+        bool ok = tracker->update(frame, currentDetectionList.detectionRectangles[0]);
+        
+        if(ok)
+            rectangle(frame, currentDetectionList.detectionRectangles[0], Scalar( 255, 0, 0 ), 2, 1 );
+
 
         drawer.draw(frame, currentDetectionList);
         cv::imshow("result", frame);
