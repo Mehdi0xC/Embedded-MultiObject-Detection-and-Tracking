@@ -1,21 +1,14 @@
 
 #include <opencv2/opencv.hpp>
 #include <opencv2/dnn.hpp>
-#include <opencv2/imgproc.hpp>
-#include <opencv2/highgui.hpp>
-#include <opencv2/core/utils/trace.hpp>
-#include <opencv2/core/ocl.hpp>
 using namespace cv;
-#include <fstream>
 #include <iostream>
-#include <cstdlib>
 #include "utils.hpp"
 #include "config.hpp"
 #include "detector.hpp"
 using namespace std;
 
 
-// Mat postprocess(Mat outputMat, Mat inputMat);
 int main(void)
 {
 
@@ -24,7 +17,7 @@ int main(void)
     DetectionList updatedDetectionList;
 
     Drawer drawer(config);
-    // Chronometer chronometer;
+    Chronometer chronometer;
     Detector detector(config);
     VideoCapture cap(0); // open the default camera
     if(!cap.isOpened()) 
@@ -33,41 +26,28 @@ int main(void)
         exit(-1);
     }
 
- //    cap.set(CAP_PROP_FRAME_WIDTH, 1000);
-	// cap.set(CAP_PROP_FRAME_HEIGHT, 600);
+    cap.set(CAP_PROP_FRAME_WIDTH, config.outputWindowWidth);
+	cap.set(CAP_PROP_FRAME_HEIGHT, config.outputWindowHeight);
 
     Mat frame;
     cv::namedWindow("result",1);
-    // double frameNo = 0;
-    // chronometer.tic();
+    double frameNo = 0;
+    chronometer.tic();
     for(;;frameNo++)
     {
         cap >> frame; 
-        /////////////////////////////////////////
-        // DO PROCESSING HERE
-        /////////////////////////////////////////
-        // resize(frame, frame, Size(100,75));
         updatedDetectionList.clearList();
         if(detector.detect(frame, updatedDetectionList))
         {
             currentDetectionList = updatedDetectionList;
         }
-        // vector<Mat> outs;
-        // Mat detection = net.forward(outs, getOutputsNames(net));
 
-        // postprocess(frame, outs);
-
-        // Mat detectionMat(detection.size[2], detection.size[3], CV_32F, detection.ptr<float>());
-
-        /////////////////////////////////////////
-        // END PROCESSING HERE
-        /////////////////////////////////////////
         drawer.draw(frame, currentDetectionList);
         cv::imshow("result", frame);
-        // frame.release();
         if(cv::waitKey(30) >= 0) break;
     }
-    cout << "FrameRate: " << frameNo/chronometer.toc()) << endl;
+    cap.release();
+    cout << "FrameRate: " << frameNo/(chronometer.toc()/1000) << endl;
     return 0;
 }
 
@@ -77,30 +57,6 @@ int main(void)
 // {
 //     for (size_t i = 0; i < outs.size(); ++i) 
 //     {
-
-//         float* data = (float*)outs[i].data;
-//         for (int j = 0; j < outs[i].rows; ++j, data += outs[i].cols) {
-//             Mat scores = outs[i].row(j).colRange(5, outs[i].cols); 
-//             Point classIdPoint;
-//             double confidence;
-//             minMaxLoc(scores, 0, &confidence, 0, &classIdPoint);
-//             if (confidence > confThreshold)
-//             {
-//                 int centerX = (int)(data[0] * frame.cols); 
-//                 int centerY = (int)(data[1] * frame.rows); 
-//                 int width = (int)(data[2] * frame.cols); 
-//                 int height = (int)(data[3] * frame.rows);
-//                 int left = centerX - width / 2;
-//                 int top = centerY - height / 2;
-
-//                 classIds.push_back(classIdPoint.x);
-//                 confidences.push_back((float)confidence);
-//                 boxes.push_back(Rect(left, top, width, height));
-//             }
-//         }
-//     }
-
-//     vector<int> indices;
 //     NMSBoxes(boxes, confidences, confThreshold, nmsThreshold, indices); 
 //     for (size_t i = 0; i < indices.size(); ++i)
 //     {

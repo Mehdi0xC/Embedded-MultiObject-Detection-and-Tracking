@@ -10,7 +10,7 @@ class Config
     Config();
     std::string modelConfiguration;
     std::string modelWeights;
-    
+
     std::vector<std::string> classes;
     std::vector<int> indices;
 
@@ -20,6 +20,9 @@ class Config
     cv::Scalar labelColor;
     float boxThickness;
 	float labelThickness;
+	int outputWindowWidth;
+	int outputWindowHeight;
+
 };
 
 #endif

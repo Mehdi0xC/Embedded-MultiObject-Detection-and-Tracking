@@ -8,7 +8,8 @@ Config::Config()
     // model = "mask_rcnn_inception_v2";
     boxColor = cv::Scalar(0,255,0);
     labelColor = cv::Scalar(255,255,255);
-
+    outputWindowWidth = 1000;
+    outputWindowHeight = 600;
     font = cv::FONT_HERSHEY_SIMPLEX;
     boxThickness = 2;
     labelThickness = 2;

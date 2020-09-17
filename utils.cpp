@@ -5,8 +5,7 @@
 
 Chronometer::Chronometer()
 {
-	// start = 0;
- //    end = 0;
+
 }
 
 void Chronometer::tic()
@@ -47,6 +46,7 @@ Drawer::Drawer(Config& config)
 	labelThickness = config.labelThickness;
 
 }
+
 void Drawer::draw(cv::Mat& frame, DetectionList& detectionList)
 {
 	for(int i=0; i < detectionList.detectionLabels.size(); i++)
