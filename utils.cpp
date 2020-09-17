@@ -3,6 +3,10 @@
 #include <chrono>
 
 
+Chronometer::Chronometer()
+{
+
+}
 
 void Chronometer::tic()
 {
@@ -36,6 +40,7 @@ Drawer::Drawer(Config& config)
 	labelColor = config.labelColor;
 	boxThickness = config.boxThickness;
 	labelThickness = config.labelThickness;
+	fontSize = config.fontSize;
 
 }
 
@@ -44,7 +49,7 @@ void Drawer::draw(cv::Mat& frame, DetectionList& detectionList)
 	for(int i=0; i < detectionList.detectionLabels.size(); i++)
 	{
 	   	// labelSize = cv::getTextSize(detectionList.detectionLabels[i], font, 0.5, 1,0);
-    	cv::putText(frame, detectionList.detectionLabels[i], detectionList.labelPoints[i], font, 1, labelColor,labelThickness);
+    	cv::putText(frame, detectionList.detectionLabels[i], detectionList.labelPoints[i], font, fontSize, labelColor,labelThickness);
     	rectangle(frame, detectionList.detectionRectangles[i], boxColor, boxThickness);
 	}	
 }

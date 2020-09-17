@@ -1,1 +1,3 @@
-g++ `pkg-config --cflags --libs /Users/mehdi/mlib/opencv/build/unix-install/opencv4.pc` -std=c++11  *.cpp && ./a.out
+ssh pi@192.168.1.7 "cd ~/Desktop/embedded-object-detection; rm -f -r *"
+scp -r  ~/Desktop/cloud/research/guitar/embedded-object-detection pi@192.168.1.7:~/Desktop/
+ssh pi@192.168.1.7 "cd ~/Desktop/embedded-object-detection; bash remote_run.sh"

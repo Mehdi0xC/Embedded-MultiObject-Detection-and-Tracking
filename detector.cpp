@@ -17,7 +17,11 @@ Detector::Detector(Config& config)
     indices = config.indices;
     modelConfiguration = config.modelConfiguration;
     modelWeights = config.modelWeights;
-    net = dnn::readNetFromTensorflow(modelWeights,modelConfiguration);
+    modelSize = config.modelSize;
+    if(config.embedded)
+        net = dnn::readNetFromCaffe(modelConfiguration, modelWeights);
+    else
+        net = dnn::readNetFromTensorflow(modelWeights,modelConfiguration);        
     if (net.empty())
     {
         std::cerr << "Can't load the network, sth went wrong" << std::endl;
@@ -30,7 +34,7 @@ bool Detector::detect(cv::Mat frame, DetectionList& detectionList)
 {
 
         newDetection = false;
-		inputBlob = dnn::blobFromImage(frame, 0.007843, Size(320,320), Scalar(127.5, 127.5, 127.5), false);
+		inputBlob = dnn::blobFromImage(frame, 0.007843, Size(modelSize,modelSize), Scalar(127.5, 127.5, 127.5), false);
         net.setInput(inputBlob);
         detection = net.forward("detection_out");
         Mat detectionOut(detection.size[2], detection.size[3], CV_32F, detection.ptr<float>());
@@ -47,9 +51,7 @@ bool Detector::detect(cv::Mat frame, DetectionList& detectionList)
                 int yLeftBottom = static_cast<int>(detectionOut.at<float>(i, 4) * frame.rows);
                 int xRightTop = static_cast<int>(detectionOut.at<float>(i, 5) * frame.cols);
                 int yRightTop = static_cast<int>(detectionOut.at<float>(i, 6) * frame.rows);
-                Rect object((int)xLeftBottom, (int)yLeftBottom,
-                            (int)(xRightTop - xLeftBottom),
-                            (int)(yRightTop - yLeftBottom));
+                Rect object((int)xLeftBottom, (int)yLeftBottom, (int)(xRightTop - xLeftBottom), (int)(yRightTop - yLeftBottom));
                 ostringstream ss;
                 ss.str("");
                 ss << (int)(confidence*100) << "%";

@@ -42,6 +42,7 @@ class Drawer
          cv::Scalar labelColor;
          float boxThickness;
          float labelThickness;
+         float fontSize;
     public:
         Drawer(Config&);
         void draw(cv::Mat& , DetectionList&);

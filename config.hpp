@@ -22,6 +22,10 @@ class Config
 	float labelThickness;
 	int outputWindowWidth;
 	int outputWindowHeight;
+    float fontSize;
+    bool embedded;
+    int modelSize;
+
 
 };
 

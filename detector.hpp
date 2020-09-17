@@ -19,6 +19,7 @@ class Detector
     	bool newDetection;
     	cv::Mat inputBlob;
     	cv::Mat detection; 
+    	int modelSize;
 
 
     public:
