@@ -4,7 +4,6 @@
 #include <opencv2/opencv.hpp>
 #include <opencv2/dnn.hpp>
 #include <vector>
-#include "utils.hpp"
 #include "config.hpp"
 
 class ObjectDetector

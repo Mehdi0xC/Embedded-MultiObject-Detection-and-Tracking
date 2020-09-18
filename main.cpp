@@ -1,7 +1,6 @@
 
 #include <opencv2/opencv.hpp>
 #include <iostream>
-#include "utils.hpp"
 #include "config.hpp"
 #include "detector.hpp"
 #include "tracker.hpp"
