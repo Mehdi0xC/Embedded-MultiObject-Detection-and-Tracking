@@ -5,6 +5,8 @@
 #include <opencv2/opencv.hpp>
 #include <vector>
 #include "config.hpp"
+#include <opencv2/tracking.hpp>
+
 class Chronometer
 {
 	private:
@@ -28,11 +30,21 @@ class DetectionList
     public:
         DetectionList();
         std::vector<std::string> detectionLabels;
-        std::vector<cv::Rect> detectionRectangles;
+        std::vector<cv::Rect2d> detectionRectangles;
         std::vector<cv::Point> labelPoints;
         std::vector<int> confidence;
+        std::vector<int> classes;
         void clearList();
 };
+
+class ColorList
+{
+    private:
+    public:
+        ColorList(Config&);
+        std::vector<cv::Scalar> colorPlate;
+};
+
 
 class Drawer
 {
@@ -43,10 +55,25 @@ class Drawer
          float boxThickness;
          float labelThickness;
          float fontSize;
+         ColorList colorList;
     public:
         Drawer(Config&);
         void draw(cv::Mat& , DetectionList&);
 
 };
+
+class MultiTracker
+{
+    private:
+        std::string trackerType;
+        int nTrackers;
+
+    public:
+        MultiTracker(Config&);
+        cv::Ptr<cv::Tracker> createTrackers();
+;
+};
+
+
 #endif
 

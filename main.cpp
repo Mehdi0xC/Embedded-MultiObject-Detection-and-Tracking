@@ -1,7 +1,6 @@
 
 #include <opencv2/opencv.hpp>
 #include <opencv2/dnn.hpp>
-using namespace cv;
 #include <iostream>
 #include "utils.hpp"
 #include "config.hpp"
@@ -14,10 +13,9 @@ using namespace std;
 int main(void)
 {
 
-    // string trackerTypes[8] = {"BOOSTING", "MIL", "KCF", "TLD","MEDIANFLOW", "GOTURN", "MOSSE", "CSRT"};
-    // string trackerType = trackerTypes[2];
-    tracker = TrackerKCF::create();
-
+    // cv::Ptr<cv::Tracker> tracker;
+    // tracker = cv::TrackerKCF::create();
+    // tracker = cv::TrackerMOSSE::create();
 
     Config config;
     DetectionList currentDetectionList;
@@ -25,36 +23,41 @@ int main(void)
 
     Drawer drawer(config);
     Chronometer chronometer;
-    Detector detector(config);
-    VideoCapture cap(0); // open the default camera
+    ObjectDetector detector(config);
+    cv::Ptr<cv::MultiTracker> multiTracker = cv::MultiTracker::create();
+
+    cv::VideoCapture cap(0); // open the default camera
     if(!cap.isOpened()) 
     {
         cout << "no capture device\n";
         exit(-1);
     }
 
-    cap.set(CAP_PROP_FRAME_WIDTH, config.outputWindowWidth);
-	cap.set(CAP_PROP_FRAME_HEIGHT, config.outputWindowHeight);
+    cap.set(cv::CAP_PROP_FRAME_WIDTH, config.outputWindowWidth);
+	cap.set(cv::CAP_PROP_FRAME_HEIGHT, config.outputWindowHeight);
 
-    Mat frame;
+    cv::Mat frame;
     cv::namedWindow("result",1);
-    double frameNo = 0;
+    int frameNo = 0;
     chronometer.tic();
     for(;;frameNo++)
     {
         cap >> frame; 
         updatedDetectionList.clearList();
-        if (frameNo%1000 == 0)
+        // if (frameNo%1000 == 0)
         if(detector.detect(frame, updatedDetectionList))
         {
             currentDetectionList = updatedDetectionList;
-            tracker->init(frame, currentDetectionList.detectionRectangles[0]);
+            // tracker->init(frame, currentDetectionList.detectionRectangles[0]);
+            
 
         }
-        bool ok = tracker->update(frame, currentDetectionList.detectionRectangles[0]);
-        
-        if(ok)
-            rectangle(frame, currentDetectionList.detectionRectangles[0], Scalar( 255, 0, 0 ), 2, 1 );
+
+        // // cv::Rect2d rr(currentDetectionList.detectionRectangles[0]);
+        // bool ok = tracker->update(frame, currentDetectionList.detectionRectangles[0]);
+
+        // // if(ok)
+        // //     rectangle(frame, currentDetectionList.detectionRectangles[0], cv::Scalar( 255, 0, 0 ), 2, 1 );
 
 
         drawer.draw(frame, currentDetectionList);
@@ -62,7 +65,7 @@ int main(void)
         if(cv::waitKey(30) >= 0) break;
     }
     cap.release();
-    cout << "FrameRate: " << frameNo/(chronometer.toc()/1000) << endl;
+    cout << "FrameRate: " << (double)frameNo/(chronometer.toc()/1000) << endl;
     return 0;
 }
 

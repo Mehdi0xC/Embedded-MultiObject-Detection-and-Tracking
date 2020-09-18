@@ -8,7 +8,7 @@ Config::Config()
     // model = "mask_rcnn_inception_v2";
     boxColor = cv::Scalar(0,255,0);
     labelColor = cv::Scalar(255,255,255);
-    fontSize = 1;
+    fontSize = 0.64;
     outputWindowWidth = 1000;
     outputWindowHeight = 600;
     font = cv::FONT_HERSHEY_SIMPLEX;
@@ -19,6 +19,7 @@ Config::Config()
 	modelSize = 320;
     outputWindowWidth = 1000;
     outputWindowHeight = 600;   
+    trackerType = "MOSSE";
 
 
 

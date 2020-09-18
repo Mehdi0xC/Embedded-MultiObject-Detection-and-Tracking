@@ -7,7 +7,7 @@
 #include "utils.hpp"
 #include "config.hpp"
 
-class Detector
+class ObjectDetector
 {
 	private:
 		std::string modelConfiguration;
@@ -23,7 +23,7 @@ class Detector
 
 
     public:
-    Detector(Config&);
+    ObjectDetector(Config&);
     bool detect(cv::Mat, DetectionList&);
     std::vector<std::string> classes;
 

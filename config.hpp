@@ -25,6 +25,7 @@ class Config
     float fontSize;
     bool embedded;
     int modelSize;
+    std::string trackerType;
 
 
 };

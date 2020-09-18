@@ -4,11 +4,10 @@
 #include <opencv2/opencv.hpp>
 #include <opencv2/dnn.hpp>
 
-using namespace cv;
 using namespace std;
+using namespace cv;
 
-
-Detector::Detector(Config& config)
+ObjectDetector::ObjectDetector(Config& config)
 {
 
     newDetection = false;
@@ -30,7 +29,7 @@ Detector::Detector(Config& config)
 }
 
 
-bool Detector::detect(cv::Mat frame, DetectionList& detectionList)
+bool ObjectDetector::detect(cv::Mat frame, DetectionList& detectionList)
 {
 
         newDetection = false;
@@ -51,17 +50,18 @@ bool Detector::detect(cv::Mat frame, DetectionList& detectionList)
                 int yLeftBottom = static_cast<int>(detectionOut.at<float>(i, 4) * frame.rows);
                 int xRightTop = static_cast<int>(detectionOut.at<float>(i, 5) * frame.cols);
                 int yRightTop = static_cast<int>(detectionOut.at<float>(i, 6) * frame.rows);
-                Rect object((int)xLeftBottom, (int)yLeftBottom, (int)(xRightTop - xLeftBottom), (int)(yRightTop - yLeftBottom));
+                Rect2d object((int)xLeftBottom, (int)yLeftBottom, (int)(xRightTop - xLeftBottom), (int)(yRightTop - yLeftBottom));
                 ostringstream ss;
                 ss.str("");
                 ss << (int)(confidence*100) << "%";
                 String conf(ss.str());
                 String label =  classes[idx] + ": " + conf;
                 int baseLine = 0;
+                detectionList.classes.push_back(idx);
                 detectionList.detectionRectangles.push_back(object);
                 detectionList.confidence.push_back((int)confidence);
                 detectionList.detectionLabels.push_back(label);
-                detectionList.labelPoints.push_back(Point(xLeftBottom, yLeftBottom-10));
+                detectionList.labelPoints.push_back(Point(xLeftBottom+5, yLeftBottom-10));
              }
         }   
         return newDetection;
