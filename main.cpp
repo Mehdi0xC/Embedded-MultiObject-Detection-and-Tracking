@@ -49,8 +49,8 @@ int main(void)
         {
             currentDetectionList = updatedDetectionList;
             // tracker->init(frame, currentDetectionList.detectionRectangles[0]);
-            
-
+            for(int i=0; i < updatedDetectionList.detectionLabels.size(); i++)
+                multiTracker->add(createTrackerByName(config.trackerType), frame, updatedDetectionList.detectionRectangles[i]);  
         }
 
         // // cv::Rect2d rr(currentDetectionList.detectionRectangles[0]);
