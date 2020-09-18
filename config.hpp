@@ -14,6 +14,7 @@ class Config
     std::vector<std::string> classes;
     std::vector<int> indices;
     float intersectionThreshold;
+    float trackerMergeThreshold;
     float confidenceThreshold;
     int font;
     cv::Scalar boxColor;

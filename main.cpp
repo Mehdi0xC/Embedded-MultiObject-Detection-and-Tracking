@@ -1,11 +1,16 @@
 
 #include <opencv2/opencv.hpp>
 #include <opencv2/dnn.hpp>
+#include <opencv2/tracking.hpp>
+
 #include <iostream>
 #include "utils.hpp"
 #include "config.hpp"
 #include "detector.hpp"
-#include <opencv2/tracking.hpp>
+#include "tracker.hpp"
+#include "chronometer.hpp"
+#include "drawer.hpp"
+
 
 using namespace std;
 
@@ -49,29 +54,30 @@ int main(void)
         if (frameNo%5 == 0)
         if(detector.detect(frame, detectionList))
         {
+        
+        trackingList.cleanTrackers();
+        trackingList.removeFailedTrackers(detectionList);
 
         for(int i=0; i < detectionList.detectionLabels.size(); i++)
         {
             int intersectionIndex = -1;
-            if(trackingList.trackers.size()==0)
-            {
+            // if(trackingList.trackers.size()==0)
+            // {
+            //     trackingList.initTracker(frame, detectionList, i, trackingTag);
+            // }
+            // else
+            // {
+            intersectionIndex = trackingList.checkIntersection(detectionList, i);
+            if (intersectionIndex == -1)
+            {             
                 trackingList.initTracker(frame, detectionList, i, trackingTag);
+                trackingTag++;
             }
             else
             {
-                intersectionIndex = trackingList.checkIntersection(detectionList, i);
-                if (intersectionIndex == -1)
-                {
-                   cout << "3" <<endl;        
-                 
-                    trackingList.initTracker(frame, detectionList, i, trackingTag);
-                    trackingTag++;
-                }
-                else
-                {
-                    trackingList.adjustTracker(frame, intersectionIndex, detectionList,  i);
-                }
+                trackingList.adjustTracker(frame, intersectionIndex, detectionList,  i);
             }
+            // }
 
         }
                     // multiTracker->add(multiTrackerMaker.createTracker(), frame, detectionList.detectionRectangles[i]); 
