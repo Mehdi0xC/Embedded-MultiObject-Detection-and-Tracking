@@ -6,7 +6,7 @@
 
 class Config
 {
-    public:
+public:
     Config();
     std::string modelConfiguration;
     std::string modelWeights;
@@ -20,9 +20,9 @@ class Config
     cv::Scalar boxColor;
     cv::Scalar labelColor;
     float boxThickness;
-	float labelThickness;
-	int outputWindowWidth;
-	int outputWindowHeight;
+    float labelThickness;
+    int outputWindowWidth;
+    int outputWindowHeight;
     float fontSize;
     bool embedded;
     int modelSize;

@@ -21,30 +21,30 @@ int main(void)
     int trackingTag = 0;
 
     cv::VideoCapture cap(0); // open the default camera
-    if(!cap.isOpened()) 
+    if (!cap.isOpened())
     {
         cout << "no capture device\n";
         exit(-1);
     }
 
     cap.set(cv::CAP_PROP_FRAME_WIDTH, config.outputWindowWidth);
-	cap.set(cv::CAP_PROP_FRAME_HEIGHT, config.outputWindowHeight);
+    cap.set(cv::CAP_PROP_FRAME_HEIGHT, config.outputWindowHeight);
 
     cv::Mat frame;
-    cv::namedWindow("result",1);
+    cv::namedWindow("result", 1);
     int frameNo = 0;
-    
-    for(chronometer.tic();;frameNo++)
+
+    for (chronometer.tic();; frameNo++)
     {
-        cap >> frame; 
+        cap >> frame;
         detector.clearList();
-        if (frameNo%5 == 0)
+        if (frameNo % 5 == 0)
         {
-            if(detector.detect(frame))
+            if (detector.detect(frame))
             {
                 trackingList.cleanTrackers();
                 trackingList.removeFailedTrackers(detector);
-                for(int i=0; i < detector.detectionLabels.size(); i++)
+                for (int i = 0; i < detector.detectionLabels.size(); i++)
                 {
                     int intersectionIndex = intersectionIndex = trackingList.checkIntersection(detector, i);
                     if (intersectionIndex == -1)
@@ -54,15 +54,15 @@ int main(void)
                 }
             }
         }
-    trackingList.updateTrackers(frame);
-    drawer.draw(frame, trackingList);
-    cv::imshow("result", frame);
-    if(cv::waitKey(30) >= 0) 
-        break;
-    
+        trackingList.updateTrackers(frame);
+        drawer.draw(frame, trackingList);
+        cv::imshow("result", frame);
+        if (cv::waitKey(30) >= 0)
+            break;
+
     }
     cap.release();
-    cout << "FrameRate: " << (double)frameNo/(chronometer.toc()/1000) << endl;
+    cout << "FrameRate: " << (double)frameNo / (chronometer.toc() / 1000) << endl;
     return 0;
 }
 
@@ -70,14 +70,14 @@ int main(void)
 
 // postprocess(Mat input, Mat outs)
 // {
-//     for (size_t i = 0; i < outs.size(); ++i) 
+//     for (size_t i = 0; i < outs.size(); ++i)
 //     {
-//     NMSBoxes(boxes, confidences, confThreshold, nmsThreshold, indices); 
+//     NMSBoxes(boxes, confidences, confThreshold, nmsThreshold, indices);
 //     for (size_t i = 0; i < indices.size(); ++i)
 //     {
 //         int idx = indices[i];
 //         Rect box = boxes[idx];
-//         drawPred(classIds[idx], confidences[idx], box.x, box.y, box.x + box.width, box.y + box.height, frame); 
+//         drawPred(classIds[idx], confidences[idx], box.x, box.y, box.x + box.width, box.y + box.height, frame);
 //     }
 // }
 
