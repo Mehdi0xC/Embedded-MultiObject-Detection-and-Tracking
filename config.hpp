@@ -10,7 +10,7 @@ class Config
     Config();
     std::string modelConfiguration;
     std::string modelWeights;
-
+    std::vector<cv::Scalar> colors;
     std::vector<std::string> classes;
     std::vector<int> indices;
     float intersectionThreshold;

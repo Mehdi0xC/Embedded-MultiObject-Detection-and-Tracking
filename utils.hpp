@@ -57,15 +57,6 @@ class TrackingList
 
 };
 
-class ColorList
-{
-    private:
-    public:
-        ColorList(Config&);
-        std::vector<cv::Scalar> colorPlate;
-};
-
-
 class Drawer
 {
     private:
@@ -75,7 +66,7 @@ class Drawer
          float boxThickness;
          float labelThickness;
          float fontSize;
-         ColorList colorList;
+         std::vectoor<cv::Scalar> colorPlate;
     public:
         Drawer(Config&);
         void draw(cv::Mat& , TrackingList&);

@@ -93,22 +93,6 @@ void TrackingList::adjustTracker(cv::Mat frame, int trackerIndex, DetectionList&
 }
 
 
-
-ColorList::ColorList(Config& config)
-{
-
-	std::random_device rd;     // only used once to initialise (seed) engine
-	std::mt19937 rng(rd());    // random-number engine used (Mersenne-Twister in this case)
-	std::uniform_int_distribution<int> uni(0,180); // guaranteed unbiased
-
-	auto random_integer = uni(rng);
-
-	int step = (int)(255/config.indices.size());
-  	for(int i=0; i < config.indices.size(); i++)
-    	colorPlate.push_back(cv::Scalar(uni(rng),uni(rng),uni(rng))); 
-}
-
-
 Drawer::Drawer(Config& config):colorList(config)
 {
 	font = config.font;
@@ -117,6 +101,7 @@ Drawer::Drawer(Config& config):colorList(config)
 	boxThickness = config.boxThickness;
 	labelThickness = config.labelThickness;
 	fontSize = config.fontSize;
+	colorPlate = config.colors;
 	// this->colorList = ColorList(config);
 
 }
@@ -125,9 +110,9 @@ void Drawer::draw(cv::Mat& frame, TrackingList& trackingList)
 {
 	for(int i=0; i < trackingList.trackers.size(); i++)
 	{
-	   	rectangle(frame, cv::Point(trackingList.trackingLabelPoints[i].x-5, trackingList.trackingLabelPoints[i].y-20), cv::Point(trackingList.trackingLabelPoints[i].x+240,trackingList.trackingLabelPoints[i].y+10), colorList.colorPlate[trackingList.trackingClasses[i]], -1);
+	   	rectangle(frame, cv::Point(trackingList.trackingLabelPoints[i].x-5, trackingList.trackingLabelPoints[i].y-20), cv::Point(trackingList.trackingLabelPoints[i].x+240,trackingList.trackingLabelPoints[i].y+10), colorPlate[trackingList.trackingClasses[i]], -1);
     	cv::putText(frame, trackingList.trackingLabels[i], trackingList.trackingLabelPoints[i], font, fontSize, cv::Scalar(255,255,255),labelThickness);
-    	rectangle(frame, trackingList.trackingRectangles[i], colorList.colorPlate[trackingList.trackingClasses[i]], boxThickness);
+    	rectangle(frame, trackingList.trackingRectangles[i], colorPlate[trackingList.trackingClasses[i]], boxThickness);
 	}	
 }
 

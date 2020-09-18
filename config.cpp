@@ -25,16 +25,28 @@ Config::Config()
 
     classes.push_back("person");
 	indices.push_back(1);    
+	colors.push_back(cv::Scalar(0,255,0));
+
     classes.push_back("bicycle");
     indices.push_back(2);
+	colors.push_back(cv::Scalar(0,0,255));
+
     classes.push_back("car");
     indices.push_back(3);
+ 	colors.push_back(cv::Scalar(0,0,255));
+   
     classes.push_back("motorcycle");
     indices.push_back(4);
+ 	colors.push_back(cv::Scalar(0,0,255));
+
     classes.push_back("bus");
     indices.push_back(6);
+ 	colors.push_back(cv::Scalar(0,0,255));
+
     classes.push_back("truck");
-    indices.push_back(8);    
+    indices.push_back(8);  
+ 	colors.push_back(cv::Scalar(0,0,255));
+  
     confidenceThreshold = 0.6;
     intersectionThreshold = 0.2;
 }
