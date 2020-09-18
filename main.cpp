@@ -36,6 +36,7 @@ int main(void)
     cap.set(cv::CAP_PROP_FRAME_WIDTH, config.outputWindowWidth);
 	cap.set(cv::CAP_PROP_FRAME_HEIGHT, config.outputWindowHeight);
 
+
     cv::Mat frame;
     cv::namedWindow("result",1);
     int frameNo = 0;
