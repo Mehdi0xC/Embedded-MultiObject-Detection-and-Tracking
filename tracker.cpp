@@ -36,13 +36,13 @@ void TrackingList::initTracker(cv::Mat frame, ObjectDetector& objectDetector, in
 }
 
 
-int TrackingList::checkIntersection(DetectionList& detectionList, int i)
+int TrackingList::checkIntersection(ObjectDetector& objectDetector, int i)
 {
 	for(int j = 0; j< trackers.size(); j++)
 		if(
-			(detectionList.detectionRectangles[i] & trackingRectangles[j]).area()>(intersectionThreshold*trackingRectangles[j].area())
+			(objectDetector.detectionRectangles[i] & trackingRectangles[j]).area()>(intersectionThreshold*trackingRectangles[j].area())
 			||
-			(detectionList.detectionRectangles[i] & trackingRectangles[j]).area()>(intersectionThreshold*detectionList.detectionRectangles[j].area())			
+			(objectDetector.detectionRectangles[i] & trackingRectangles[j]).area()>(intersectionThreshold*objectDetector.detectionRectangles[j].area())			
 			)
 			return j;
 	return -1;
@@ -78,13 +78,13 @@ void TrackingList::cleanTrackers()
 			remove(trackersToRemove);
 }
 
-void TrackingList::removeFailedTrackers(DetectionList& detectionList)
+void TrackingList::removeFailedTrackers(ObjectDetector& objectDetector)
 {
 	int trackersToRemove = -1;
 	for(int i = 0 ; i < trackers.size(); i++)
-		for(int j=0; j< detectionList.detectionLabels.size(); j++)
+		for(int j=0; j< objectDetector.detectionLabels.size(); j++)
 		{
-			if((trackingRectangles[i] & detectionList.detectionRectangles[j]).area() != 0)
+			if((trackingRectangles[i] & objectDetector.detectionRectangles[j]).area() != 0)
 				continue;
 			trackersToRemove = i;
 		}	
@@ -93,7 +93,7 @@ void TrackingList::removeFailedTrackers(DetectionList& detectionList)
 }
 
 
-void TrackingList::adjustTracker(cv::Mat frame, int trackerIndex, DetectionList& detectionList, int detectionIndex)
+void TrackingList::adjustTracker(cv::Mat frame, int trackerIndex, ObjectDetector& objectDetector, int detectionIndex)
 {
 	int tag = trackingTags[trackerIndex];
 	std::string label = trackingLabels[trackerIndex];
@@ -102,12 +102,12 @@ void TrackingList::adjustTracker(cv::Mat frame, int trackerIndex, DetectionList&
 	remove(trackerIndex);  	
 
 	cv::Ptr<cv::Tracker> tracker = cv::TrackerMOSSE::create();
-    tracker->init(frame, detectionList.detectionRectangles[detectionIndex]);
+    tracker->init(frame, objectDetector.detectionRectangles[detectionIndex]);
     trackers.push_back(tracker);
     trackingTags.push_back(tag);
     trackingLabels.push_back(label);
-    trackingRectangles.push_back(detectionList.detectionRectangles[detectionIndex]);
-    trackingLabelPoints.push_back(detectionList.labelPoints[detectionIndex]);
+    trackingRectangles.push_back(objectDetector.detectionRectangles[detectionIndex]);
+    trackingLabelPoints.push_back(objectDetector.labelPoints[detectionIndex]);
     trackingClasses.push_back(trackingClass);  	
 }
 

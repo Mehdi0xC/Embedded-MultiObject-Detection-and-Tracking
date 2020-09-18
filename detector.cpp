@@ -59,7 +59,7 @@ bool ObjectDetector::detect(cv::Mat frame)
                 int baseLine = 0;
                 detectionClasses.push_back(idx);
                 detectionRectangles.push_back(object);
-                confidence.push_back((int)confidence);
+                detectionConfidence.push_back((int)confidence);
                 detectionLabels.push_back(label);
                 labelPoints.push_back(Point(xLeftBottom+5, yLeftBottom-10));
              }
@@ -73,6 +73,6 @@ void ObjectDetector::clearList()
         detectionLabels.clear();
         detectionRectangles.clear();
         labelPoints.clear();
-        confidence.clear();
+        detectionConfidence.clear();
         detectionClasses.clear();
 } 

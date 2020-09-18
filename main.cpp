@@ -41,7 +41,7 @@ int main(void)
         detector.clearList();
         if (frameNo%5 == 0)
         {
-            if(detector.detect(frame, detector))
+            if(detector.detect(frame))
             {
                 trackingList.cleanTrackers();
                 trackingList.removeFailedTrackers(detector);
