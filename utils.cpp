@@ -35,9 +35,9 @@ void DetectionList::clearList()
         detectionClasses.clear();
 }
 
-TrackingList::TrackingList()
+TrackingList::TrackingList(Config& config)
 {
-
+	intersectionThreshold = config.intersectionThreshold;
 }
 
 void TrackingList::clearList()
@@ -47,6 +47,49 @@ void TrackingList::clearList()
         trackingRectangles.clear();
         trackingLabelPoints.clear();
         trackingClasses.clear();
+        trackingTags.clear();
+}
+
+void TrackingList::initTracker(cv::Mat frame, DetectionList& detectionList, int i, int& trackingTag)
+{
+        cv::Ptr<cv::Tracker> tracker = cv::TrackerMOSSE::create();
+        tracker->init(frame, detectionList.detectionRectangles[i]);
+        trackers.push_back(tracker);
+        trackingTags.push_back(trackingTag);
+        trackingLabels.push_back(detectionList.detectionLabels[i] + " ID: #" + std::to_string(trackingTag));
+        trackingRectangles.push_back(detectionList.detectionRectangles[i]);
+        trackingLabelPoints.push_back(detectionList.labelPoints[i]);
+        trackingClasses.push_back(detectionList.detectionClasses[i]);  
+        trackingTag++;
+}
+
+
+int TrackingList::checkIntersection(DetectionList& detectionList, int i)
+{
+	for(int j = 0; j< trackers.size(); j++)
+		if(
+			(detectionList.detectionRectangles[i] & trackingRectangles[j]).area()>(intersectionThreshold*trackingRectangles[j].area())
+			||
+			(detectionList.detectionRectangles[i] & trackingRectangles[j]).area()>(intersectionThreshold*detectionList.detectionRectangles[j].area())			
+			)
+			return j;
+	return -1;
+}
+
+void TrackingList::adjustTracker(cv::Mat frame, int trackerIndex, DetectionList& detectionList, int detectionIndex)
+{
+	int tag = trackingTags[trackerIndex];
+	std::string label = trackingLabels[trackerIndex];
+	int trackingClass = trackingClasses[trackerIndex];
+	trackers.erase(trackers.begin() + trackerIndex);
+	cv::Ptr<cv::Tracker> tracker = cv::TrackerMOSSE::create();
+    tracker->init(frame, detectionList.detectionRectangles[detectionIndex]);
+    trackers.push_back(tracker);
+    trackingTags.push_back(tag);
+    trackingLabels.push_back(label);
+    trackingRectangles.push_back(detectionList.detectionRectangles[detectionIndex]);
+    trackingLabelPoints.push_back(detectionList.labelPoints[detectionIndex]);
+    trackingClasses.push_back(trackingClass);  	
 }
 
 

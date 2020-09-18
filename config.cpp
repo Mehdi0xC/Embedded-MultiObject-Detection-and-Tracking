@@ -36,4 +36,5 @@ Config::Config()
     classes.push_back("truck");
     indices.push_back(8);    
     confidenceThreshold = 0.6;
+    intersectionThreshold = 0.2;
 }

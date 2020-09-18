@@ -42,13 +42,19 @@ class TrackingList
     private:
 
     public:
-        TrackingList();
+        TrackingList(Config&);
         std::vector<cv::Ptr<cv::Tracker>> trackers;
         std::vector<std::string> trackingLabels;
         std::vector<cv::Rect2d> trackingRectangles;
         std::vector<cv::Point> trackingLabelPoints;
-        std::vector<int> trackingClasses;        
+        std::vector<int> trackingClasses;  
+        std::vector<int> trackingTags;
+        float intersectionThreshold;      
         void clearList();
+        void initTracker(cv::Mat, DetectionList&, int, int&);
+        int checkIntersection(DetectionList&, int);
+        void adjustTracker(cv::Mat, int, DetectionList&, int);
+
 };
 
 class ColorList

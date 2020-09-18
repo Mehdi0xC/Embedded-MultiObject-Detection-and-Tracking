@@ -19,13 +19,13 @@ int main(void)
 
     Config config;
     DetectionList detectionList;
-    TrackingList trackingList;
+    TrackingList trackingList(config);
     // MultiTrackerMaker multiTrackerMaker(config);
     Drawer drawer(config);
     Chronometer chronometer;
     ObjectDetector detector(config);
     // cv::Ptr<cv::MultiTracker> multiTracker = cv::MultiTracker::create();
-
+    int trackingTag = 1;
     cv::VideoCapture cap(0); // open the default camera
     if(!cap.isOpened()) 
     {
@@ -46,22 +46,34 @@ int main(void)
     {
         cap >> frame; 
         detectionList.clearList();
-        if (frameNo%10 == 0)
+        if (frameNo%5 == 0)
         if(detector.detect(frame, detectionList))
         {
 
+        for(int i=0; i < detectionList.detectionLabels.size(); i++)
+        {
+            int intersectionIndex = -1;
             if(trackingList.trackers.size()==0)
-                for(int i=0; i < detectionList.detectionLabels.size(); i++)
+            {
+                trackingList.initTracker(frame, detectionList, i, trackingTag);
+            }
+            else
+            {
+                intersectionIndex = trackingList.checkIntersection(detectionList, i);
+                if (intersectionIndex == -1)
                 {
-                    cv::Ptr<cv::Tracker> tracker = cv::TrackerMOSSE::create();
-                    tracker->init(frame, detectionList.detectionRectangles[i]);
-                    trackingList.trackers.push_back(tracker);
-                    trackingList.trackingLabels.push_back(detectionList.detectionLabels[i] + " ID: #" + std::to_string(id++));
-                    trackingList.trackingRectangles.push_back(detectionList.detectionRectangles[i]);
-                    trackingList.trackingLabelPoints.push_back(detectionList.labelPoints[i]);
-                    trackingList.trackingClasses.push_back(detectionList.detectionClasses[i]);   
-
+                   cout << "3" <<endl;        
+                 
+                    trackingList.initTracker(frame, detectionList, i, trackingTag);
+                    trackingTag++;
                 }
+                else
+                {
+                    trackingList.adjustTracker(frame, intersectionIndex, detectionList,  i);
+                }
+            }
+
+        }
                     // multiTracker->add(multiTrackerMaker.createTracker(), frame, detectionList.detectionRectangles[i]); 
             // else
             // { 
