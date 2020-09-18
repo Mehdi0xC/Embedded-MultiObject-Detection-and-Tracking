@@ -1,6 +1,4 @@
-#include "utils.hpp"
 #include <iostream>
-#include <random>
 #include "drawer.hpp"
 
 Drawer::Drawer(Config& config)
