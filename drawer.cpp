@@ -4,14 +4,11 @@
 Drawer::Drawer(Config& config)
 {
 	font = config.font;
-	boxColor = config.boxColor;
 	labelColor = config.labelColor;
 	boxThickness = config.boxThickness;
 	labelThickness = config.labelThickness;
 	fontSize = config.fontSize;
 	colorPlate = config.colors;
-	// this->colorList = ColorList(config);
-
 }
 
 void Drawer::draw(cv::Mat& frame, TrackingList& trackingList)

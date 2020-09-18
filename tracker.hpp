@@ -26,6 +26,8 @@ class TrackingList
         void adjustTracker(cv::Mat, int, DetectionList&, int);
         void cleanTrackers();
         void remove(int);
+        std::string trackerType;
+        void updateTrackers(cv::Mat);
 
 
 };

@@ -6,7 +6,6 @@ Config::Config()
     // model = "faster_rcnn_inception_v2";
     // model = "faster_rcnn_resnet50";
     // model = "mask_rcnn_inception_v2";
-    // boxColor = cv::Scalar(0,255,0);
     labelColor = cv::Scalar(250,250,250);
     fontSize = 0.64;
     outputWindowWidth = 1000;
@@ -20,6 +19,8 @@ Config::Config()
     outputWindowWidth = 1000;
     outputWindowHeight = 600;   
     trackerType = "MOSSE";
+    // trackerType = "KCF";
+
     trackerMergeThreshold = 0.7;
 
 

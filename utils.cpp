@@ -13,4 +13,4 @@ void DetectionList::clearList()
         labelPoints.clear();
         confidence.clear();
         detectionClasses.clear();
-}
+} 

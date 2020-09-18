@@ -5,6 +5,7 @@ TrackingList::TrackingList(Config& config)
 {
 	intersectionThreshold = config.intersectionThreshold;
 	trackerMergeThreshold = config.trackerMergeThreshold;
+	trackerType = config.trackerType;
 }
 
 void TrackingList::clearList()
@@ -19,7 +20,11 @@ void TrackingList::clearList()
 
 void TrackingList::initTracker(cv::Mat frame, DetectionList& detectionList, int i, int& trackingTag)
 {
-        cv::Ptr<cv::Tracker> tracker = cv::TrackerMOSSE::create();
+		cv::Ptr<cv::Tracker> tracker;
+		if(trackerType == "MOSSE")
+        	tracker = cv::TrackerMOSSE::create();
+        else
+        	tracker = cv::TrackerKCF::create();
         tracker->init(frame, detectionList.detectionRectangles[i]);
         trackers.push_back(tracker);
         trackingTags.push_back(trackingTag);
@@ -75,7 +80,6 @@ void TrackingList::cleanTrackers()
 
 void TrackingList::removeFailedTrackers(DetectionList& detectionList)
 {
-
 	int trackersToRemove = -1;
 	for(int i = 0 ; i < trackers.size(); i++)
 		for(int j=0; j< detectionList.detectionLabels.size(); j++)
@@ -83,10 +87,7 @@ void TrackingList::removeFailedTrackers(DetectionList& detectionList)
 			if((trackingRectangles[i] & detectionList.detectionRectangles[j]).area() != 0)
 				continue;
 			trackersToRemove = i;
-		}
-
-
-			
+		}	
 		if(trackersToRemove!=-1)	
 			remove(trackersToRemove);
 }
@@ -119,3 +120,20 @@ void TrackingList::remove(int trackerIndex)
     trackingLabelPoints.erase(trackingLabelPoints.begin() + trackerIndex);
     trackingClasses.erase(trackingClasses.begin() + trackerIndex);
 }
+
+
+void TrackingList::updateTrackers(cv::Mat frame)
+{
+       for(int i=0; i < trackers.size(); i++)
+        {
+            if(trackers[i]->update(frame, trackingRectangles[i]))
+            {
+                    // trackingList.trackingLabels[j]
+                    // trackingList.trackingRectangles[j]
+                    trackingLabelPoints[i].x = trackingRectangles[i].x+5;
+                    trackingLabelPoints[i].y = trackingRectangles[i].y-10;
+            }
+
+        }
+}
+
