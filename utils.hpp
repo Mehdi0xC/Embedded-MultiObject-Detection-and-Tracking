@@ -33,7 +33,21 @@ class DetectionList
         std::vector<cv::Rect2d> detectionRectangles;
         std::vector<cv::Point> labelPoints;
         std::vector<int> confidence;
-        std::vector<int> classes;
+        std::vector<int> detectionClasses;
+        void clearList();
+};
+
+class TrackingList
+{
+    private:
+
+    public:
+        TrackingList();
+        std::vector<cv::Ptr<cv::Tracker>> trackers;
+        std::vector<std::string> trackingLabels;
+        std::vector<cv::Rect2d> trackingRectangles;
+        std::vector<cv::Point> trackingLabelPoints;
+        std::vector<int> trackingClasses;        
         void clearList();
 };
 
@@ -58,21 +72,21 @@ class Drawer
          ColorList colorList;
     public:
         Drawer(Config&);
-        void draw(cv::Mat& , DetectionList&);
+        void draw(cv::Mat& , TrackingList&);
 
 };
 
-class MultiTracker
-{
-    private:
-        std::string trackerType;
-        int nTrackers;
+// class MultiTrackerMaker
+// {
+//     private:
+//         std::string trackerType;
+//         int nTrackers;
 
-    public:
-        MultiTracker(Config&);
-        cv::Ptr<cv::Tracker> createTrackers();
-;
-};
+//     public:
+//         MultiTrackerMaker(Config&);
+//         cv::Ptr<cv::Tracker> createTracker();
+// ;
+// };
 
 
 #endif

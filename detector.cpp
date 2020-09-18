@@ -57,7 +57,7 @@ bool ObjectDetector::detect(cv::Mat frame, DetectionList& detectionList)
                 String conf(ss.str());
                 String label =  classes[idx] + ": " + conf;
                 int baseLine = 0;
-                detectionList.classes.push_back(idx);
+                detectionList.detectionClasses.push_back(idx);
                 detectionList.detectionRectangles.push_back(object);
                 detectionList.confidence.push_back((int)confidence);
                 detectionList.detectionLabels.push_back(label);

@@ -18,13 +18,13 @@ int main(void)
     // tracker = cv::TrackerMOSSE::create();
 
     Config config;
-    DetectionList currentDetectionList;
-    DetectionList updatedDetectionList;
-
+    DetectionList detectionList;
+    TrackingList trackingList;
+    // MultiTrackerMaker multiTrackerMaker(config);
     Drawer drawer(config);
     Chronometer chronometer;
     ObjectDetector detector(config);
-    cv::Ptr<cv::MultiTracker> multiTracker = cv::MultiTracker::create();
+    // cv::Ptr<cv::MultiTracker> multiTracker = cv::MultiTracker::create();
 
     cv::VideoCapture cap(0); // open the default camera
     if(!cap.isOpened()) 
@@ -39,19 +39,61 @@ int main(void)
     cv::Mat frame;
     cv::namedWindow("result",1);
     int frameNo = 0;
+    int id = 0;
     chronometer.tic();
     for(;;frameNo++)
     {
         cap >> frame; 
-        updatedDetectionList.clearList();
-        // if (frameNo%1000 == 0)
-        if(detector.detect(frame, updatedDetectionList))
+        detectionList.clearList();
+        if (frameNo%10 == 0)
+        if(detector.detect(frame, detectionList))
         {
-            currentDetectionList = updatedDetectionList;
-            // tracker->init(frame, currentDetectionList.detectionRectangles[0]);
-            for(int i=0; i < updatedDetectionList.detectionLabels.size(); i++)
-                multiTracker->add(createTrackerByName(config.trackerType), frame, updatedDetectionList.detectionRectangles[i]);  
+
+            if(trackingList.trackers.size()==0)
+                for(int i=0; i < detectionList.detectionLabels.size(); i++)
+                {
+                    cv::Ptr<cv::Tracker> tracker = cv::TrackerMOSSE::create();
+                    tracker->init(frame, detectionList.detectionRectangles[i]);
+                    trackingList.trackers.push_back(tracker);
+                    trackingList.trackingLabels.push_back(detectionList.detectionLabels[i] + " ID: #" + std::to_string(id++));
+                    trackingList.trackingRectangles.push_back(detectionList.detectionRectangles[i]);
+                    trackingList.trackingLabelPoints.push_back(detectionList.labelPoints[i]);
+                    trackingList.trackingClasses.push_back(detectionList.detectionClasses[i]);   
+
+                }
+                    // multiTracker->add(multiTrackerMaker.createTracker(), frame, detectionList.detectionRectangles[i]); 
+            // else
+            // { 
+            // for(int i=0; i < detectionList.detectionLabels.size(); i++)
+            //     for(int j=0; j < trackingList.detectionLabels.size(); j++)
+            //     {
+            //         if((detectionList.detectionRectangles[i] & trackingList.detectionRectangles[j]).area()<(0.5*(detectionList.detectionRectangles[i].area()+trackerList.detectionRectangles[j].area())))
+            //             multiTracker->add(multiTrackerMaker.createTracker(), frame, detectionList.detectionRectangles[i]);  
+            //         else
+            //     }
+            // }
         }
+
+        for(int j=0; j < trackingList.trackers.size(); j++)
+        {
+            if(trackingList.trackers[j]->update(frame, trackingList.trackingRectangles[j]))
+            {
+                    // trackingList.trackingLabels[j]
+                    // trackingList.trackingRectangles[j]
+                    trackingList.trackingLabelPoints[j].x = trackingList.trackingRectangles[j].x+5;
+                    trackingList.trackingLabelPoints[j].y = trackingList.trackingRectangles[j].y-10;
+            }
+
+        }
+
+        // multiTracker->update(frame);
+
+          // Draw tracked objects
+          // for(unsigned i=0; i<multiTracker->getObjects().size(); i++)
+          // {
+          //   rectangle(frame, multiTracker->getObjects()[i], cv::Scalar(255,255,255), 2, 1);
+          //   // multiTracker->getObjects()[i].x 
+          // }
 
         // // cv::Rect2d rr(currentDetectionList.detectionRectangles[0]);
         // bool ok = tracker->update(frame, currentDetectionList.detectionRectangles[0]);
@@ -60,7 +102,7 @@ int main(void)
         // //     rectangle(frame, currentDetectionList.detectionRectangles[0], cv::Scalar( 255, 0, 0 ), 2, 1 );
 
 
-        drawer.draw(frame, currentDetectionList);
+        drawer.draw(frame, trackingList);
         cv::imshow("result", frame);
         if(cv::waitKey(30) >= 0) break;
     }
