@@ -1,6 +1,9 @@
 #ifndef TRACKER_H_
 #define TRACKER_H_
 #include "utils.hpp"
+#include "detector.hpp"
+
+
 
 #include <opencv2/opencv.hpp>
 #include <opencv2/dnn.hpp>
@@ -18,12 +21,12 @@ class TrackingList
         std::vector<cv::Point> trackingLabelPoints;
         std::vector<int> trackingClasses;  
         std::vector<int> trackingTags;
-        void removeFailedTrackers(DetectionList&);
+        void removeFailedTrackers(ObjectDetector&);
         float intersectionThreshold;      
         void clearList();
-        void initTracker(cv::Mat, DetectionList&, int, int&);
-        int checkIntersection(DetectionList&, int);
-        void adjustTracker(cv::Mat, int, DetectionList&, int);
+        void initTracker(cv::Mat, ObjectDetector&, int, int&);
+        int checkIntersection(ObjectDetector&, int);
+        void adjustTracker(cv::Mat, int, ObjectDetector&, int);
         void cleanTrackers();
         void remove(int);
         std::string trackerType;

@@ -15,7 +15,6 @@ using namespace std;
 int main(void)
 {
     Config config;
-    DetectionList detectionList;
     TrackingList trackingList(config);
     Drawer drawer(config);
     Chronometer chronometer;
@@ -39,20 +38,20 @@ int main(void)
     for(chronometer.tic();;frameNo++)
     {
         cap >> frame; 
-        detectionList.clearList();
+        detector.clearList();
         if (frameNo%5 == 0)
         {
-            if(detector.detect(frame, detectionList))
+            if(detector.detect(frame, detector))
             {
                 trackingList.cleanTrackers();
-                trackingList.removeFailedTrackers(detectionList);
-                for(int i=0; i < detectionList.detectionLabels.size(); i++)
+                trackingList.removeFailedTrackers(detector);
+                for(int i=0; i < detector.detectionLabels.size(); i++)
                 {
-                    int intersectionIndex = intersectionIndex = trackingList.checkIntersection(detectionList, i);
+                    int intersectionIndex = intersectionIndex = trackingList.checkIntersection(detector, i);
                     if (intersectionIndex == -1)
-                        trackingList.initTracker(frame, detectionList, i, trackingTag);
+                        trackingList.initTracker(frame, detector, i, trackingTag);
                     else
-                        trackingList.adjustTracker(frame, intersectionIndex, detectionList,  i);
+                        trackingList.adjustTracker(frame, intersectionIndex, detector,  i);
                 }
             }
         }

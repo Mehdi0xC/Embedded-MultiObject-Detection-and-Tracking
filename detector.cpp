@@ -29,7 +29,7 @@ ObjectDetector::ObjectDetector(Config& config)
 }
 
 
-bool ObjectDetector::detect(cv::Mat frame, DetectionList& detectionList)
+bool ObjectDetector::detect(cv::Mat frame)
 {
 
         newDetection = false;
@@ -57,12 +57,22 @@ bool ObjectDetector::detect(cv::Mat frame, DetectionList& detectionList)
                 String conf(ss.str());
                 String label =  classes[idx] + ": " + conf;
                 int baseLine = 0;
-                detectionList.detectionClasses.push_back(idx);
-                detectionList.detectionRectangles.push_back(object);
-                detectionList.confidence.push_back((int)confidence);
-                detectionList.detectionLabels.push_back(label);
-                detectionList.labelPoints.push_back(Point(xLeftBottom+5, yLeftBottom-10));
+                detectionClasses.push_back(idx);
+                detectionRectangles.push_back(object);
+                confidence.push_back((int)confidence);
+                detectionLabels.push_back(label);
+                labelPoints.push_back(Point(xLeftBottom+5, yLeftBottom-10));
              }
         }   
         return newDetection;
 }
+
+
+void ObjectDetector::clearList()
+{
+        detectionLabels.clear();
+        detectionRectangles.clear();
+        labelPoints.clear();
+        confidence.clear();
+        detectionClasses.clear();
+} 

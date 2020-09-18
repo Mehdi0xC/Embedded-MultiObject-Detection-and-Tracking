@@ -18,20 +18,20 @@ void TrackingList::clearList()
         trackingTags.clear();
 }
 
-void TrackingList::initTracker(cv::Mat frame, DetectionList& detectionList, int i, int& trackingTag)
+void TrackingList::initTracker(cv::Mat frame, ObjectDetector& objectDetector, int i, int& trackingTag)
 {
 		cv::Ptr<cv::Tracker> tracker;
 		if(trackerType == "MOSSE")
         	tracker = cv::TrackerMOSSE::create();
         else
         	tracker = cv::TrackerKCF::create();
-        tracker->init(frame, detectionList.detectionRectangles[i]);
+        tracker->init(frame, objectDetector.detectionRectangles[i]);
         trackers.push_back(tracker);
         trackingTags.push_back(trackingTag);
-        trackingLabels.push_back(detectionList.detectionLabels[i] + " ID: #" + std::to_string(trackingTag));
-        trackingRectangles.push_back(detectionList.detectionRectangles[i]);
-        trackingLabelPoints.push_back(detectionList.labelPoints[i]);
-        trackingClasses.push_back(detectionList.detectionClasses[i]);  
+        trackingLabels.push_back(objectDetector.detectionLabels[i] + " ID: #" + std::to_string(trackingTag));
+        trackingRectangles.push_back(objectDetector.detectionRectangles[i]);
+        trackingLabelPoints.push_back(objectDetector.labelPoints[i]);
+        trackingClasses.push_back(objectDetector.detectionClasses[i]);  
         trackingTag++;
 }
 
