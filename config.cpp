@@ -36,7 +36,19 @@ Config::Config()
 	outputWindowWidth = 1000;
 
 	// Output window height
-	outputWindowHeight = 600;	
+	outputWindowHeight = 600;
+
+	// True if getting video from file
+	captureFromVideo = false;
+
+	// True if getting video from file
+	videoAddress = "";
+
+	// True if getting video from camera
+	captureFromCamera = true;
+
+	// Camera device (default for webcam is 0)
+	cameraDevice = 0;	
 
 	////////////////////////////////////////
 	////////////////////////////////////////

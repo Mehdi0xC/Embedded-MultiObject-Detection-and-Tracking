@@ -28,8 +28,10 @@ public:
     int modelSize;
     int detectionRate;
     std::string trackerType;
-
-
+    bool captureFromVideo;
+    std::string videoAddress;
+    bool captureFromCamera;
+    int cameraDevice;   
 };
 
 #endif
