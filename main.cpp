@@ -2,8 +2,8 @@
 #include <opencv2/opencv.hpp>
 #include <iostream>
 #include "config.hpp"
-#include "detector.hpp"
-#include "tracker.hpp"
+#include "objectdetector.hpp"
+#include "trackinglist.hpp"
 #include "chronometer.hpp"
 #include "drawer.hpp"
 
@@ -18,6 +18,7 @@ int main(void)
     ////////////////////////////////////////
     ////////////////////////////////////////
 
+    Config config;
     TrackingList trackingList(config);
     Drawer drawer(config);
     Chronometer chronometer;
