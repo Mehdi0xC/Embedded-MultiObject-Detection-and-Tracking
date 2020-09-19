@@ -19,16 +19,19 @@ int main(void)
     Chronometer chronometer;
     ObjectDetector detector(config);
     int trackingTag = 0;
+    int detectionRate = config.detectionRate;
 
-    cv::VideoCapture cap(0); // open the default camera
-    if (!cap.isOpened())
-    {
-        cout << "no capture device\n";
-        exit(-1);
-    }
+    cv::VideoCapture cap("videos/traffic2.mp4"); 
 
-    cap.set(cv::CAP_PROP_FRAME_WIDTH, config.outputWindowWidth);
-    cap.set(cv::CAP_PROP_FRAME_HEIGHT, config.outputWindowHeight);
+    // cv::VideoCapture cap(0); // open the default camera
+    // if (!cap.isOpened())
+    // {
+    //     cout << "no capture device\n";
+    //     exit(-1);
+    // }
+
+    // cap.set(cv::CAP_PROP_FRAME_WIDTH, config.outputWindowWidth);
+    // cap.set(cv::CAP_PROP_FRAME_HEIGHT, config.outputWindowHeight);
 
     cv::Mat frame;
     cv::namedWindow("result", 1);
@@ -38,15 +41,17 @@ int main(void)
     {
         cap >> frame;
         detector.clearList();
-        if (frameNo % 5 == 0)
+        if (frameNo % detectionRate == 0)
         {
-            if (detector.detect(frame))
+
+            bool newDetection = detector.detect(frame);
+            trackingList.cleanTrackers();
+            trackingList.removeFailedTrackers(detector);            
+            if(newDetection)
             {
-                trackingList.cleanTrackers();
-                trackingList.removeFailedTrackers(detector);
                 for (int i = 0; i < detector.detectionLabels.size(); i++)
                 {
-                    int intersectionIndex = intersectionIndex = trackingList.checkIntersection(detector, i);
+                    int intersectionIndex = trackingList.checkIntersection(detector, i);
                     if (intersectionIndex == -1)
                         trackingList.initTracker(frame, detector, i, trackingTag);
                     else

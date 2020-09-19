@@ -1,9 +1,5 @@
 #include "chronometer.hpp"
-#include <iostream>
 #include <chrono>
-#include <random>
-
-
 
 Chronometer::Chronometer()
 {

@@ -26,6 +26,7 @@ public:
     float fontSize;
     bool embedded;
     int modelSize;
+    int detectionRate;
     std::string trackerType;
 
 

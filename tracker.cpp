@@ -39,12 +39,16 @@ void TrackingList::initTracker(cv::Mat frame, ObjectDetector& objectDetector, in
 int TrackingList::checkIntersection(ObjectDetector& objectDetector, int i)
 {
 	for (int j = 0; j < trackers.size(); j++)
+	{
 		if (
-		    (objectDetector.detectionRectangles[i] & trackingRectangles[j]).area() > (intersectionThreshold * trackingRectangles[j].area())
+		    (objectDetector.detectionRectangles[i] & trackingRectangles[j]).area() > intersectionThreshold * trackingRectangles[j].area()
 		    ||
-		    (objectDetector.detectionRectangles[i] & trackingRectangles[j]).area() > (intersectionThreshold * objectDetector.detectionRectangles[j].area())
+		    (objectDetector.detectionRectangles[i] & trackingRectangles[j]).area() > intersectionThreshold * objectDetector.detectionRectangles[i].area()
 		)
+		{
 			return j;
+		}
+	}
 	return -1;
 }
 
@@ -81,13 +85,18 @@ void TrackingList::cleanTrackers()
 void TrackingList::removeFailedTrackers(ObjectDetector& objectDetector)
 {
 	int trackersToRemove = -1;
+	bool intersection;
 	for (int i = 0 ; i < trackers.size(); i++)
+	{
+		intersection = false;
 		for (int j = 0; j < objectDetector.detectionLabels.size(); j++)
 		{
 			if ((trackingRectangles[i] & objectDetector.detectionRectangles[j]).area() != 0)
-				continue;
-			trackersToRemove = i;
+				intersection = true;
 		}
+		if (!intersection)
+			trackersToRemove = i;
+	}
 	if (trackersToRemove != -1)
 		remove(trackersToRemove);
 }
