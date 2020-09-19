@@ -86,19 +86,3 @@ int main(void)
     cout << "FrameRate: " << (double)frameNo / (chronometer.toc() / 1000) << endl;
     return 0;
 }
-
-
-
-// postprocess(Mat input, Mat outs)
-// {
-//     for (size_t i = 0; i < outs.size(); ++i)
-//     {
-//     NMSBoxes(boxes, confidences, confThreshold, nmsThreshold, indices);
-//     for (size_t i = 0; i < indices.size(); ++i)
-//     {
-//         int idx = indices[i];
-//         Rect box = boxes[idx];
-//         drawPred(classIds[idx], confidences[idx], box.x, box.y, box.x + box.width, box.y + box.height, frame);
-//     }
-// }
-
