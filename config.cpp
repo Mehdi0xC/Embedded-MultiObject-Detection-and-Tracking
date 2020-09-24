@@ -66,7 +66,7 @@ Config::Config()
 	modelSize = 320;
 
 	// Specifies after how many frame processing iterations you want to call the model for prediction
-	detectionRate = 5;
+	detectionRate = 50;
 
 	////////////////////////////////////////
 	////////////////////////////////////////
